@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Realtime Coding Game</title>
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+
+<body>
+    <div class="app">
+        <header>
+            <h1>Realtime Programming Game</h1>
+            <div class="right">
+                <label>Name <input id="name" maxlength="24" /></label>
+                <button id="saveName">Save</button>
+                <label>Language
+                    <select id="language">
+                        <option value="js">JavaScript</option>
+                        <option value="python">Python</option>
+                        <option value="c">C</option>
+                    </select>
+                </label>
+                <span id="timer"></span>
+            </div>
+        </header>
+
+        <main>
+            <section class="left">
+                <div class="panel">
+                    <div class="panel-header">
+                        <span>Your World</span>
+                        <span id="dirWatcher"></span>
+                    </div>
+                    <canvas id="grid" width="500" height="500"></canvas>
+                </div>
+            </section>
+            <section class="right">
+                <div class="controls">
+                    <button id="runOnce">Run step ▶</button>
+                    <label><input type="checkbox" id="autoRun" /> Auto-run</label>
+                    <button id="insertSample">Insert sample</button>
+                    <span class="spacer"></span>
+                    <input id="adminEmail" placeholder="admin email" />
+                    <input id="adminPass" placeholder="password" type="password" />
+                    <button id="adminLogin">Admin Login</button>
+                    <button id="adminStart">Start</button>
+                    <button id="adminEnd">End</button>
+                </div>
+                <div id="notice" class="notice"></div>
+                <textarea id="editor" spellcheck="false"
+                    placeholder="// Write code here. See instructions below."></textarea>
+                <div class="logs" id="logs"></div>
+                <div class="scoreboard" id="scoreboard"></div>
+                <div class="instructions" id="instructions">
+                    <h3>How to play</h3>
+                    <p>Goal: reach green circles by issuing one action per step. The server applies only the first
+                        action emitted by your code each tick.</p>
+                    <ul>
+                        <li>You must set your player name first. You cannot change it later.</li>
+                        <li>Time limit: each round is 2 minutes.</li>
+                        <li>Scoring: success +1 per valid step, +20 per goal, plus bonuses for speed/efficiency. Errors
+                            penalized.</li>
+                    </ul>
+                    <h4>Action output per language</h4>
+                    <p><b>JavaScript:</b> Call one of: <code>api.moveForward()</code>, <code>api.turnLeft()</code>,
+                        <code>api.turnRight()</code>. Use <code>api.log()</code> to print logs.
+                    </p>
+                    <p><b>Python:</b> Print exactly one token to stdout: <code>MOVE</code> | <code>LEFT</code> |
+                        <code>RIGHT</code>.
+                    </p>
+                    <p><b>C:</b> Print exactly one token to stdout: <code>MOVE</code> | <code>LEFT</code> |
+                        <code>RIGHT</code>. Your <code>main()</code> should <code>printf</code> a single word.
+                    </p>
+                    <h3>Examples</h3>
+                    <div class="examples">
+                        <div class="example">
+                            <div class="example-title">JavaScript: move in a square</div>
+                            <button class="example-insert" data-lang="js">Insert</button>
+                            <pre><code>// Move 3 steps, then turn right — repeat
+for (let i = 0; i < 3; i++) {
+    api.moveForward();
+}
+api.turnRight();
+</code></pre>
+                        </div>
+                        <div class="example">
+                            <div class="example-title">Python: step forward each tick</div>
+                            <button class="example-insert" data-lang="python">Insert</button>
+                            <pre><code># Print one action per run
+print('MOVE')
+</code></pre>
+                        </div>
+                        <div class="example">
+                            <div class="example-title">C: step forward each tick</div>
+                            <button class="example-insert" data-lang="c">Insert</button>
+                            <pre><code>#include &lt;stdio.h&gt;
+int main(){ printf("MOVE\n"); return 0; }
+</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/client.js" type="module"></script>
+</body>
+
+</html>

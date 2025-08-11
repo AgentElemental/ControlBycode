@@ -1,0 +1,25 @@
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;background:#0f1221;color:#e8eaf6}
+header{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#161a2f;border-bottom:1px solid #2a2f54}
+header h1{margin:0;font-size:18px}
+header .right{display:flex;gap:8px;align-items:center}
+.app main{display:flex;gap:12px;padding:12px}
+.left{flex:0 0 520px}
+.right{flex:1;display:flex;flex-direction:column;gap:8px}
+.controls{display:flex;gap:12px;align-items:center}
+.controls .spacer{flex:1}
+#adminEmail,#adminPass{background:#0b0e1a;color:#c6d0f5;border:1px solid #2a2f54;border-radius:6px;padding:4px}
+#editor{height:220px;width:100%;background:#0b0e1a;color:#c6d0f5;border:1px solid #2a2f54;padding:8px;border-radius:6px;font-family:Consolas,monospace}
+#grid{background:#0b0e1a;border:1px solid #2a2f54;border-radius:6px}
+.logs, .scoreboard{background:#0b0e1a;border:1px solid #2a2f54;border-radius:6px;min-height:80px;padding:8px}
+.panel{background:#0b0e1a;border:1px solid #2a2f54;border-radius:6px;padding:8px}
+.panel-header{display:flex;justify-content:space-between;margin-bottom:6px;color:#c6d0f5}
+.scoreboard .row{display:flex;justify-content:space-between;border-bottom:1px dashed #2a2f54;padding:2px 0}
+.scoreboard .row:last-child{border-bottom:none}
+.instructions{background:#0b0e1a;border:1px solid #2a2f54;border-radius:6px;padding:8px}
+.instructions h3, .instructions h4{margin:6px 0}
+.notice{background:#2a2f54;color:#e8eaf6;padding:6px;border-radius:6px;margin:6px 0;display:none}
+.examples{display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px}
+.example{background:#0b0e1a;border:1px dashed #2a2f54;border-radius:6px;padding:8px}
+.example-title{font-weight:600;margin-bottom:6px}
+.example pre{background:#0b0e1a;color:#c6d0f5;border:1px solid #2a2f54;border-radius:6px;padding:8px;overflow:auto}
+.example-insert{margin-bottom:6px}
