@@ -39,7 +39,7 @@ export function applyAction(world, playerId, action) {
     (world.players[playerId] = { x: 1, y: 1, dir: "E" });
   if (action.type === "turn") {
     p.dir = turn(p.dir, action.dir);
-    return { ok: true };
+    return { ok: true, type: "turn" };
   }
   if (action.type === "move") {
     const [dx, dy] = vec(p.dir);
@@ -59,26 +59,32 @@ export function applyAction(world, playerId, action) {
         // remove goal
         world.goals = world.goals.filter((k) => k !== key(p.x, p.y));
       }
-      return { ok: true, hitGoal };
+      return { ok: true, hitGoal, type: "move" };
     }
-    return { ok: false, reason: "blocked" };
+    return { ok: false, reason: "blocked", type: "move" };
   }
   return { ok: false, reason: "unknown-action" };
 }
 
 export function scoreSubmission({ exec, result }) {
   let score = 0;
+  const blocked = result && result.ok === false && result.reason === "blocked";
+  const ok = !!result?.ok;
   if (exec.error) score -= 5;
-  if (result?.ok) score += 1; // successful action
+  // Only count success for move actions (turns yield 0)
+  if (ok && result?.type !== "turn") score += 1;
   if (result?.hitGoal) score += 20; // big reward
-  if (result && result.ok === false && result.reason === "blocked") score -= 2; // penalty for hitting wall
+  if (blocked) score -= 2; // penalty for hitting wall
 
-  // efficiency: fewer ops and smaller code
-  score += Math.max(0, 5 - Math.floor((exec.metrics.ops || 0) / 5));
-  // time: faster is better
-  score += exec.metrics.timeMs < 20 ? 3 : exec.metrics.timeMs < 60 ? 1 : 0;
-  // memory proxy: code size
-  score += exec.metrics.size < 200 ? 2 : exec.metrics.size < 800 ? 1 : 0;
+  // Only award efficiency/time/size bonuses on successful actions
+  if (ok && result?.type !== "turn") {
+    // efficiency: fewer ops
+    score += Math.max(0, 5 - Math.floor((exec.metrics.ops || 0) / 5));
+    // time: faster is better
+    score += exec.metrics.timeMs < 20 ? 3 : exec.metrics.timeMs < 60 ? 1 : 0;
+    // memory proxy: code size
+    score += exec.metrics.size < 200 ? 2 : exec.metrics.size < 800 ? 1 : 0;
+  }
 
   return score;
 }

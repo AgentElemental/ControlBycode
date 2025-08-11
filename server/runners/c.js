@@ -15,19 +15,35 @@ export async function runC(code, input) {
   );
   const cFile = `${base}.c`;
   const exe = `${base}.exe`;
-  const wrapper = `#include <stdio.h>\nint main(){\n${code}\nreturn 0;}\n`;
+  // Accept three patterns:
+  // 1) Full program (contains main): compile as-is
+  // 2) Plain token line: MOVE|LEFT|RIGHT -> generate minimal program
+  // 3) Snippet of statements: wrap inside a minimal main
+  const hasMain = /\b(int|void)\s+main\s*\(/.test(code);
+  const token = (code || "").trim().toUpperCase();
+  const isTokenOnly = /^(MOVE|LEFT|RIGHT)$/.test(token);
+  let wrapper;
+  if (hasMain) {
+    wrapper = code;
+  } else if (isTokenOnly) {
+    const word = token;
+    wrapper = `#include <stdio.h>\nint main(){ printf("${word}\\n"); return 0; }\n`;
+  } else {
+    wrapper = `#include <stdio.h>\nint main(){\n${code}\nreturn 0;}\n`;
+  }
   await fs.writeFile(cFile, wrapper, "utf8");
 
   let error = null,
     logs = [];
-  const TIME_LIMIT_MS = 500;
+  const COMPILE_TIMEOUT_MS = 5000;
+  const RUN_TIMEOUT_MS = 500;
   try {
     await execWithTimeout(
       "gcc",
       [cFile, "-O2", "-s", "-o", exe],
-      TIME_LIMIT_MS
+      COMPILE_TIMEOUT_MS
     );
-    const { stdout, stderr } = await execWithTimeout(exe, [], TIME_LIMIT_MS);
+    const { stdout, stderr } = await execWithTimeout(exe, [], RUN_TIMEOUT_MS);
     if (stderr) logs.push(stderr);
     const token = (stdout || "").trim().split(/\s+/)[0] || "";
     const actions = toAction(token);

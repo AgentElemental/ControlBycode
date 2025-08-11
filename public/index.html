@@ -40,13 +40,14 @@
                 <div class="controls">
                     <button id="runOnce">Run step ▶</button>
                     <label><input type="checkbox" id="autoRun" /> Auto-run</label>
-                    <button id="insertSample">Insert sample</button>
+
                     <span class="spacer"></span>
                     <input id="adminEmail" placeholder="admin email" />
                     <input id="adminPass" placeholder="password" type="password" />
                     <button id="adminLogin">Admin Login</button>
                     <button id="adminStart">Start</button>
                     <button id="adminEnd">End</button>
+                    <button id="adminClear">Clear Global</button>
                 </div>
                 <div id="notice" class="notice"></div>
                 <textarea id="editor" spellcheck="false"
@@ -73,33 +74,20 @@
                     <p><b>C:</b> Print exactly one token to stdout: <code>MOVE</code> | <code>LEFT</code> |
                         <code>RIGHT</code>. Your <code>main()</code> should <code>printf</code> a single word.
                     </p>
-                    <h3>Examples</h3>
-                    <div class="examples">
-                        <div class="example">
-                            <div class="example-title">JavaScript: move in a square</div>
-                            <button class="example-insert" data-lang="js">Insert</button>
-                            <pre><code>// Move 3 steps, then turn right — repeat
-for (let i = 0; i < 3; i++) {
-    api.moveForward();
-}
-api.turnRight();
+                    <h4>Samples (copy/paste)</h4>
+                    <pre><code>// JavaScript (one action per run)
+api.moveForward();
+// or api.turnLeft(); or api.turnRight();
 </code></pre>
-                        </div>
-                        <div class="example">
-                            <div class="example-title">Python: step forward each tick</div>
-                            <button class="example-insert" data-lang="python">Insert</button>
-                            <pre><code># Print one action per run
+                    <pre><code># Python (print one token)
 print('MOVE')
+# or: print('LEFT') / print('RIGHT')
 </code></pre>
-                        </div>
-                        <div class="example">
-                            <div class="example-title">C: step forward each tick</div>
-                            <button class="example-insert" data-lang="c">Insert</button>
-                            <pre><code>#include &lt;stdio.h&gt;
+                    <pre><code>// C (print one token)
+#include &lt;stdio.h&gt;
 int main(){ printf("MOVE\n"); return 0; }
+// or: printf("LEFT\n"); / printf("RIGHT\n");
 </code></pre>
-                        </div>
-                    </div>
                 </div>
             </section>
         </main>

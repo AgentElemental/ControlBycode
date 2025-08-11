@@ -16,30 +16,24 @@ const languageSel = document.getElementById("language");
 const grid = document.getElementById("grid");
 const ctx = grid.getContext("2d");
 const notice = document.getElementById("notice");
-const insertSampleBtn = document.getElementById("insertSample");
+// No sample insertion button
 const dirWatcher = document.getElementById("dirWatcher");
 const adminEmail = document.getElementById("adminEmail");
 const adminPass = document.getElementById("adminPass");
 const adminLoginBtn = document.getElementById("adminLogin");
 const adminStartBtn = document.getElementById("adminStart");
 const adminEndBtn = document.getElementById("adminEnd");
+const adminClearBtn = document.getElementById("adminClear");
 
 saveNameBtn.onclick = () => socket.emit("setName", nameInput.value);
 runOnceBtn.onclick = () => socket.emit("runOnce");
 autoRunChk.onchange = () => socket.emit("autoRun", autoRunChk.checked);
 editor.oninput = () => socket.emit("updateCode", editor.value);
-insertSampleBtn.onclick = () => insertSample(languageSel.value);
-// Handle clicks on example insert buttons in the instructions
-document.addEventListener("click", (e) => {
-  const btn = e.target.closest?.(".example-insert");
-  if (!btn) return;
-  const lang = btn.getAttribute("data-lang");
-  if (lang) insertSample(lang);
-});
+// No sample insertion available
 languageSel &&
   (languageSel.onchange = () => {
     socket.emit("setLanguage", languageSel.value);
-    setStarterCode(languageSel.value);
+    // Do not auto-insert template code on language change
   });
 
 socket.on("state", (s) => {
@@ -173,16 +167,7 @@ function renderWorld() {
   dirWatcher.textContent = myPos ? `Dir: ${myPos.dir}` : "";
 }
 
-function insertSample(lang) {
-  if (lang === "js") {
-    editor.value = `// Move in a small square\nfor(let i=0;i<3;i++){ api.moveForward(); }\napi.turnRight();`;
-  } else if (lang === "python") {
-    editor.value = `# Always move forward one step\nprint('MOVE')`;
-  } else if (lang === "c") {
-    editor.value = `#include <stdio.h>\nint main(){ printf("MOVE\n"); return 0; }`;
-  }
-  socket.emit("updateCode", editor.value);
-}
+// Removed insertSample functionality
 
 function showNotice(msg) {
   notice.textContent = msg;
@@ -270,6 +255,8 @@ adminLoginBtn &&
     }));
 adminStartBtn && (adminStartBtn.onclick = () => socket.emit("adminStartRound"));
 adminEndBtn && (adminEndBtn.onclick = () => socket.emit("adminEndRound"));
+adminClearBtn &&
+  (adminClearBtn.onclick = () => socket.emit("adminClearGlobal"));
 socket.on("adminOk", (p) => {
   showNotice(p.ok ? "Admin login ok" : p.reason || "Admin login failed");
 });

@@ -18,8 +18,4 @@ header .right{display:flex;gap:8px;align-items:center}
 .instructions{background:#0b0e1a;border:1px solid #2a2f54;border-radius:6px;padding:8px}
 .instructions h3, .instructions h4{margin:6px 0}
 .notice{background:#2a2f54;color:#e8eaf6;padding:6px;border-radius:6px;margin:6px 0;display:none}
-.examples{display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px}
-.example{background:#0b0e1a;border:1px dashed #2a2f54;border-radius:6px;padding:8px}
-.example-title{font-weight:600;margin-bottom:6px}
-.example pre{background:#0b0e1a;color:#c6d0f5;border:1px solid #2a2f54;border-radius:6px;padding:8px;overflow:auto}
-.example-insert{margin-bottom:6px}
+/* examples removed */

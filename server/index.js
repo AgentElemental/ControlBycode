@@ -7,6 +7,8 @@ import { v4 as uuidv4 } from "uuid";
 import { runPlayerCode as runJS } from "./sandbox.js";
 import { runCode as runExternal } from "./runners/index.js";
 import { addScore, readAll as readLeaderboard } from "./store.js";
+import { promises as fs } from "node:fs";
+import { join } from "node:path";
 import { createInitialWorld, applyAction, scoreSubmission } from "./logic.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -146,6 +148,25 @@ io.on("connection", (socket) => {
     endRound(room);
   });
 
+  // Admin: clear global leaderboard
+  socket.on("adminClearGlobal", async () => {
+    if (!room.admins.has(socket.id)) return;
+    try {
+      const dataDir = join(process.cwd(), "data");
+      const file = join(dataDir, "leaderboard.json");
+      await fs.mkdir(dataDir, { recursive: true });
+      await fs.writeFile(file, JSON.stringify({}, null, 2));
+      io.to(socket.id).emit("adminOk", { ok: true });
+      // broadcast refreshed global top
+      io.to(room.id).emit("global", { leaderboard: [] });
+    } catch (e) {
+      io.to(socket.id).emit("adminOk", {
+        ok: false,
+        reason: String((e && e.message) || e),
+      });
+    }
+  });
+
   socket.on("runOnce", async () => {
     if (player.isAdmin) return;
     if (!player.nameLocked) {
@@ -209,7 +230,25 @@ async function runForPlayer(room, socketId, { auto }) {
   player.metrics = exec.metrics;
   player.lastLogs = exec.logs?.slice(-5) || [];
   player.lastError = exec.error || null;
-  io.to(socketId).emit("world", world);
+  // If player collected all goals, spawn a fresh world (next level)
+  if (Array.isArray(world.goals) && world.goals.length === 0) {
+    const newWorld = createInitialWorld();
+    // place player at a random free cell
+    let sx = 1,
+      sy = 1,
+      tries = 0;
+    while (tries++ < 200) {
+      sx = Math.floor(Math.random() * newWorld.width);
+      sy = Math.floor(Math.random() * newWorld.height);
+      const k = `${sx},${sy}`;
+      if (!newWorld.obstacles.includes(k) && !newWorld.goals.includes(k)) break;
+    }
+    newWorld.players[socketId] = { x: sx, y: sy, dir: "E" };
+    room.worlds.set(socketId, newWorld);
+    io.to(socketId).emit("world", newWorld);
+  } else {
+    io.to(socketId).emit("world", world);
+  }
   io.to(room.id).emit("state", serializeRoom(room));
 }
 
