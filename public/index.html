@@ -1,100 +1,167 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" class="dark">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Realtime Coding Game</title>
-    <link rel="stylesheet" href="/styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ControlByCode - Cyberpunk Programming Arena</title>
+    <link rel="stylesheet" href="styles1.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Updated fonts for cyberpunk aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
-    <div class="app">
-        <header>
-            <h1>Realtime Programming Game</h1>
-            <div class="right">
-                <label>Name <input id="name" maxlength="24" /></label>
-                <button id="saveName">Save</button>
-                <label>Language
-                    <select id="language">
-                        <option value="js">JavaScript</option>
-                        <option value="python">Python</option>
-                        <option value="c">C</option>
-                    </select>
-                </label>
-                <span id="timer"></span>
+    <div class="cyberpunk-container">
+        <!-- Updated header with cyberpunk styling -->
+        <header class="cyberpunk-header">
+            <div class="header-left">
+                <div class="neon-logo">
+                    <span class="logo-bracket">[</span>
+                    <span class="logo-text">CONTROL_BY_CODE</span>
+                    <span class="logo-bracket">]</span>
+                </div>
+                <div class="version-tag">v2.0_CYBERPUNK</div>
+            </div>
+            <div class="header-right">
+                <div class="connection-status" id="connectionStatus">
+                    <div class="status-indicator">
+                        <span class="status-dot"></span>
+                        <span class="status-text">NEURAL_LINK...</span>
+                    </div>
+                    <div class="system-time" id="systemTime"></div>
+                </div>
             </div>
         </header>
 
-        <main>
-            <section class="left">
-                <div class="panel">
-                    <div class="panel-header">
-                        <span>Your World</span>
-                        <span id="dirWatcher"></span>
+        <!-- Enhanced main content with cyberpunk grid layout -->
+        <div class="main-interface">
+            <!-- Left Panel - Code Terminal -->
+            <div class="code-terminal">
+                <div class="terminal-header">
+                    <div class="header-tabs">
+                        <div class="tab active">CODE_INJECTION</div>
+                        <div class="tab">NEURAL_NET</div>
                     </div>
-                    <canvas id="grid" width="500" height="500"></canvas>
+                    <div class="terminal-controls">
+                        <select id="languageSelect" class="cyber-select">
+                            <option value="js">JAVASCRIPT</option>
+                            <option value="python">PYTHON</option>
+                            <option value="c">C_LANG</option>
+                        </select>
+                    </div>
                 </div>
-            </section>
-            <section class="right">
-                <div class="controls">
-                    <button id="runOnce">Run step ▶</button>
-                    <label><input type="checkbox" id="autoRun" /> Auto-run</label>
-
-                    <span class="spacer"></span>
-                    <input id="adminEmail" placeholder="admin email" />
-                    <input id="adminPass" placeholder="password" type="password" />
-                    <button id="adminLogin">Admin Login</button>
-                    <button id="adminStart">Start</button>
-                    <button id="adminEnd">End</button>
-                    <button id="adminClear">Clear Global</button>
-                </div>
-                <div id="notice" class="notice"></div>
-                <textarea id="editor" spellcheck="false"
-                    placeholder="// Write code here. See instructions below."></textarea>
-                <div class="logs" id="logs"></div>
-                <div class="scoreboard" id="scoreboard"></div>
-                <div class="instructions" id="instructions">
-                    <h3>How to play</h3>
-                    <p>Goal: reach green circles by issuing one action per step. The server applies only the first
-                        action emitted by your code each tick.</p>
-                    <ul>
-                        <li>You must set your player name first. You cannot change it later.</li>
-                        <li>Time limit: each round is 2 minutes.</li>
-                        <li>Scoring: success +1 per valid step, +20 per goal, plus bonuses for speed/efficiency. Errors
-                            penalized.</li>
-                    </ul>
-                    <h4>Action output per language</h4>
-                    <p><b>JavaScript:</b> Call one of: <code>api.moveForward()</code>, <code>api.turnLeft()</code>,
-                        <code>api.turnRight()</code>. Use <code>api.log()</code> to print logs.
-                    </p>
-                    <p><b>Python:</b> Print exactly one token to stdout: <code>MOVE</code> | <code>LEFT</code> |
-                        <code>RIGHT</code>.
-                    </p>
-                    <p><b>C:</b> Print exactly one token to stdout: <code>MOVE</code> | <code>LEFT</code> |
-                        <code>RIGHT</code>. Your <code>main()</code> should <code>printf</code> a single word.
-                    </p>
-                    <h4>Samples (copy/paste)</h4>
-                    <pre><code>// JavaScript (one action per run)
+                <div class="code-matrix">
+                    <div class="line-numbers" id="lineNumbers"></div>
+                    <textarea id="codeEditor" placeholder="// INITIALIZE NEURAL INTERFACE
+// AVAILABLE COMMANDS: api.moveForward(), api.turnLeft(), api.turnRight()
+// EXAMPLE HACK:
 api.moveForward();
-// or api.turnLeft(); or api.turnRight();
-</code></pre>
-                    <pre><code># Python (print one token)
-print('MOVE')
-# or: print('LEFT') / print('RIGHT')
-</code></pre>
-                    <pre><code>// C (print one token)
-#include &lt;stdio.h&gt;
-int main(){ printf("MOVE\n"); return 0; }
-// or: printf("LEFT\n"); / printf("RIGHT\n");
-</code></pre>
+api.log('INFILTRATING SYSTEM...');"></textarea>
                 </div>
-            </section>
-        </main>
+                <div class="terminal-footer">
+                    <button id="runOnce" class="cyber-btn primary">EXECUTE</button>
+                    <button id="autoRun" class="cyber-btn secondary">AUTO_HACK</button>
+                    <div class="hacker-identity">
+                        <input type="text" id="playerName" placeholder="HACKER_ALIAS..." maxlength="24">
+                        <button id="setName" class="cyber-btn accent">REGISTER</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Panel - Cyber Grid -->
+            <div class="cyber-world">
+                <div class="world-header">
+                    <div class="world-title">CYBER_MATRIX</div>
+                    <div class="round-display">
+                        <span class="round-label">ROUND_TIME:</span>
+                        <span class="round-timer" id="roundTimer">--:--</span>
+                    </div>
+                </div>
+                <div class="matrix-container">
+                    <div class="world-grid" id="worldGrid"></div>
+                    <div class="grid-overlay"></div>
+                </div>
+                <div class="world-status">
+                    <div class="status-bar">
+                        <div class="status-segment">
+                            <span class="segment-label">STATUS:</span>
+                            <span class="segment-value" id="roundStatus">AWAITING_HACK...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - System Monitor -->
+            <div class="system-monitor">
+                <!-- Hacker Stats -->
+                <div class="monitor-section">
+                    <div class="section-header">
+                        <span class="header-icon">◉</span>
+                        <span class="header-text">HACKER_STATS</span>
+                    </div>
+                    <div class="stats-matrix">
+                        <div class="stat-node">
+                            <div class="stat-label">SCORE</div>
+                            <div class="stat-value" id="playerScore">0</div>
+                            <div class="stat-bar"><div class="bar-fill"></div></div>
+                        </div>
+                        <div class="stat-node">
+                            <div class="stat-label">OPS</div>
+                            <div class="stat-value" id="playerOps">0</div>
+                            <div class="stat-bar"><div class="bar-fill"></div></div>
+                        </div>
+                        <div class="stat-node">
+                            <div class="stat-label">LATENCY</div>
+                            <div class="stat-value" id="playerTime">0ms</div>
+                            <div class="stat-bar"><div class="bar-fill"></div></div>
+                        </div>
+                        <div class="stat-node">
+                            <div class="stat-label">CODE_SIZE</div>
+                            <div class="stat-value" id="codeSize">0b</div>
+                            <div class="stat-bar"><div class="bar-fill"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leaderboard -->
+                <div class="monitor-section">
+                    <div class="section-header">
+                        <span class="header-icon">▲</span>
+                        <span class="header-text">HACKER_RANKS</span>
+                    </div>
+                    <div class="leaderboard-matrix" id="leaderboard"></div>
+                </div>
+
+                <!-- System Console -->
+                <div class="monitor-section console-section">
+                    <div class="section-header">
+                        <span class="header-icon">$</span>
+                        <span class="header-text">SYSTEM_LOG</span>
+                        <button id="clearConsole" class="clear-btn">PURGE</button>
+                    </div>
+                    <div class="console-matrix" id="consoleOutput"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Updated admin panel with cyberpunk styling -->
+        <div class="admin-matrix" id="adminPanel" style="display: none;">
+            <div class="matrix-header">
+                <span class="admin-icon">⚡</span>
+                <span class="admin-title">ADMIN_OVERRIDE</span>
+            </div>
+            <div class="admin-controls">
+                <input type="email" id="adminEmail" placeholder="admin@cyberspace.net" class="cyber-input">
+                <input type="password" id="adminPassword" placeholder="neural_key" class="cyber-input">
+                <button id="adminLogin" class="cyber-btn primary">AUTHENTICATE</button>
+                <button id="startRound" class="cyber-btn success">INIT_ROUND</button>
+                <button id="endRound" class="cyber-btn danger">TERMINATE</button>
+                <button id="clearGlobal" class="cyber-btn warning">SYSTEM_RESET</button>
+            </div>
+        </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/client.js" type="module"></script>
+    <script src="client1.js"></script>
 </body>
-
 </html>
